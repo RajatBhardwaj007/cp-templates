@@ -5,7 +5,7 @@
 using namespace __gnu_pbds;
 using namespace std;
 
-
+#define all(x) (x).begin(),(x).end()
 #define fast ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
 #define ll long long int
 #define ull unsigned long long
@@ -87,17 +87,14 @@ struct hash_pair {
 /*
 Additional functions in the ordered set other than the set
 Along with the previous operations of the set, it supports two main important operations
-
 1. find_by_order(k): It returns to an iterator to the kth element (counting from zero) in the set in O(logn) time.To find the first element k must be zero.
  Example: Let us assume we have a set s : {1, 5, 6, 17, 88}, then =>      *(s.find_by_order(2)) : 3rd element in the set i.e. 6 
  Note: if not present, it will "return n"
  
 2.order_of_key(k) : It returns to the number of items that are strictly smaller than our item k in O(logn) time.
 Let us assume we have a set s : {1, 5, 6, 17, 88}, then           =>      s.order_of_key(6) : Count of elements strictly smaller than 6 is 2.
-
 NOTE :As the set contains only UNIQUE elements,so to perform the operations on an array having repeated elements we can take the KEY as a pair of elements instead
 of integer in which the first element is our required element of the array and only the second element of the pair must be unique so that the whole pair is unique.
-
 i.e ordered_set_pairs   and elements are {a[i],i}
 */
  
