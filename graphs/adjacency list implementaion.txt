@@ -1,0 +1,20 @@
+vector<int>adj[10001];
+int vis[10001];
+
+int main()
+{
+    int n;//no.of edges
+    cin>>n;
+   for(int i=0;i<n-1;i++)   //n-1 edges  
+    {
+      int a,b;
+	cin>>a>>b;
+	adj[a].push_back(b);
+	adj[b].push_back(a);
+    }
+    
+    for(int j=0;j<n;j++)
+       vis[j]=0;   //not visited.
+
+
+}

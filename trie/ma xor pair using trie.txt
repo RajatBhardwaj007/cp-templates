@@ -1,0 +1,82 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+class TrieNode
+{
+	public:
+	TrieNode* child[2];
+};
+
+void insert(int element, TrieNode* head)
+{
+	TrieNode* curr =head;
+	
+	for(int i=31; i>=0; i--)
+	{
+		if((1<<i)&element) // if ith bit is set
+		{
+		   if(!curr->child[1]) // current ka child[1] nhi exist krta, to create kro	
+		        curr->child[1] = new TrieNode();
+			curr=curr->child[1];	
+		}
+		else
+		{
+			if(!curr->child[0]) // current ka child[1] nhi exist krta, to create kro	
+		        curr->child[0] = new TrieNode();
+			curr=curr->child[0];
+		}
+	}
+}
+
+int findMaxXor(TrieNode* head, int arr[], int n)
+{
+	int max_xor = INT_MIN;
+	// har element k lie check krna hai ki agar suppose element 101 hai, to left bit se poocho, ki kya 0 hai vo(kyoki 1^0 =1). to aise hi agar opposite bit hai to badhiya
+	// vrna jo h ussi mai chalo
+	for(int i=0; i<n; i++)
+	{
+		int element  = arr[i];
+		TrieNode* curr = head;
+		int temp = 0;
+		for(int i=31; i>=0; i--)
+		{
+			if((1<<i)&element)// set hai to check kro 0 vala child hai kya
+			{
+				if(curr->child[0])
+				{
+					curr=curr->child[0];
+					temp += (1<<i);
+				}
+				else
+				curr = curr->child[1];
+			}
+			else
+			{
+				if(curr->child[1])
+				{
+					curr=curr->child[1];
+					temp += (1<<i);
+				}
+				else
+				curr = curr->child[0];
+			}
+			
+		}
+		
+		max_xor = max(max_xor, temp);
+	}
+	
+	return max_xor;
+	
+}
+int main()
+{
+	int arr[5] = {1,2,3,4,5};
+	
+	TrieNode* root = new TrieNode();
+	for(int i=0; i<5; i++)
+	  insert(arr[i],root);
+	  
+	 cout<<findMaxXor(root,arr,5)<<endl; 
+	
+}

@@ -1,0 +1,30 @@
+void dfs(int node )
+{
+   vis[node]=1;
+   
+    for(int child: adj[node])	//as good as for(int i=0;i<adj[node].size();i++)
+     {
+ 	if(vis[child])==0)
+         dfs(child);
+      }
+
+
+}
+
+//isse sb visit ho jaayenge nodes
+------------------------------------------------
+
+void dfs(int node,int d )
+{
+   vis[node]=1;
+   dist[node]=d;  
+    for(int child: adj[node])	//as good as for(int i=0;i<adj[node].size();i++)
+     {
+ 	if(vis[child])==0)
+         dfs(child,dist[node]+1);
+      }
+
+
+}
+
+//isse sb visit ho jaayenge nodes
