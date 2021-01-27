@@ -1,0 +1,269 @@
+/*
+const int LOGN=19,NNN=1000*1000+5;
+int DP[LOGN][NN],level[NNN];
+void dfs0(int u)
+{
+	for(auto it=adj[u].begin();it!=adj[u].end();it++)
+		if(*it!=DP[0][u])
+		{
+			DP[0][*it]=u;
+			level[*it]=level[u]+1;
+			dfs0(*it);
+		}
+}
+void preprocess()
+{
+	dfs0(0);
+	for(int i=1;i<LOGN;i++)
+		for(int j=0;j<n;j++)
+			DP[i][j] = DP[i-1][DP[i-1][j]];
+}
+int lca(int a,int b)
+{
+	if(level[a]>level[b])swap(a,b);
+	int d = level[b]-level[a];
+	for(int i=0;i<LOGN;i++)
+		if(d&(1<<i))
+			b=DP[i][b];
+	if(a==b)return a;
+	for(int i=LOGN-1;i>=0;i--)
+		if(DP[i][a]!=DP[i][b])
+			a=DP[i][a],b=DP[i][b];
+	return DP[0][a];
+}
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long int
+#define mod 1000000007
+vector<int> ar[100001];
+ll par[100001],val[100001];
+const int maxN = 20;
+ll root;
+ll level[100001] , LCA[100001][maxN+1],temp[100001];
+
+void SieveOfEratosthenes(ll largest, vector<ll> &prime) 
+{ 
+    // Create a boolean array "isPrime[0..n]" and initialize 
+    // all entries it as true. A value in isPrime[i] will 
+    // finally be false if i is Not a isPrime, else true. 
+    bool isPrime[largest+1]; 
+    memset(isPrime, true, sizeof(isPrime)); 
+  
+    for (int p=2; p*p<=largest; p++) 
+    { 
+        // If isPrime[p] is not changed, then it is a isPrime 
+        if (isPrime[p] == true) 
+        { 
+            // Update all multiples of p 
+            for (int i=p*2; i<=largest; i += p) 
+                isPrime[i] = false; 
+        } 
+    } 
+  
+    // Print all isPrime numbers 
+    for (int p=2; p<=largest; p++) 
+        if (isPrime[p]) 
+            prime.push_back(p); 
+} 
+  
+// Returns number of divisors in array 
+// multiplication 
+ll countDivisorsMult(ll arr[], ll n) 
+{ 
+    // Find all prime numbers smaller than 
+    // the largest element. 
+    ll largest = *max_element(arr, arr+n); 
+    vector<ll> prime; 
+    SieveOfEratosthenes(largest, prime); 
+  
+    // Find counts of occurrences of each prime 
+    // factor 
+    unordered_map<int, int> mp; 
+    for (int i=0; i<n; i++) 
+    { 
+        for (int j=0; j<prime.size(); j++) 
+        { 
+            while(arr[i] > 1 && arr[i]%prime[j] ==0 ) 
+            { 
+                arr[i] /= prime[j]; 
+                mp[prime[j]]++; 
+            } 
+        } 
+        if (arr[i] != 1) 
+            mp[arr[i]]++; 
+    } 
+  
+    // Compute count of all divisors using counts 
+    // prime factors. 
+    long long int res = 1; 
+    for (auto it : mp) 
+       res *= (it.second + 1L); 
+  
+    return res; 
+} 
+
+void dfs(ll node ,ll lvl , ll par)
+{
+	level[node] = lvl;
+	LCA[node][0] = par;
+ 
+	for(int child : ar[node])
+	if(child != par)
+	{
+		dfs(child , lvl+1 , node);
+	}
+}
+ 
+ 
+void init(int n,int root)
+{
+	dfs(root , 0 , -1);
+ 
+	for(int i=1;i<=maxN;i++)
+	{
+		for(int j=1;j<=n;j++)
+		if(LCA[j][i-1] != -1)
+		{
+			int par = LCA[j][i-1];
+			LCA[j][i] = LCA[par][i-1];
+		}
+	}
+}
+int getLCA(int a , int b)
+{
+	if(level[b] < level[a]) swap(a , b);
+ 
+	int d = level[b] - level[a];
+ 
+	while(d > 0)
+	{
+		int i = log2(d);
+		b = LCA[b][i];
+ 
+		d -= 1 << i;
+	}
+ 
+	if(a == b) return a;
+ 
+	for(int i=maxN;i>=0;i--)
+	if(LCA[a][i] != -1 && (LCA[a][i] != LCA[b][i]))
+	{
+		a = LCA[a][i] , b = LCA[b][i];
+	}
+ 
+	return LCA[a][0];
+}
+
+ll getproduct(ll a,ll lca, ll b)
+{   ll ct=0;
+    while(1)
+       {   if((a==lca)&& (b==lca))
+            break;
+           if(b==lca)
+           {  temp[ct]=val[a];
+             a=par[a];
+             ct++;
+           }
+           else if(a==lca)
+           {temp[ct]=val[b];
+             b=par[b];
+             ct++;
+           }
+           else
+           {  temp[ct]=val[a];
+           ct++;
+              temp[ct]=val[b];
+              ct++;
+               a=par[a];
+               b=par[b];
+           }
+       } 
+       temp[ct]=val[lca];
+       ct++;
+       
+       return ct;
+}
+int main()
+{    
+    ll t;
+    cin>>t;
+    while(t--)
+    {
+        
+        ll n;
+        cin>>n;
+        for(int i=0;i<=n; i++)
+        {
+            par[i]=-1;
+            
+        }
+        for(int i=1;i<=n;i++)
+	{
+		for(int j=0;j<=maxN;j++)
+		LCA[i][j] = -1;
+	}
+        for(int i=1; i<n;i++)
+        {
+            ll a,b;
+            cin>>a>>b;
+            par[b]=a;
+            ar[a].push_back(b);
+            ar[b].push_back(a);
+        }
+        
+        for(int i=1;i<=n;i++)
+        {
+            if(par[i]==-1)
+              {root=i;
+              break;
+              }
+        }
+        
+        init(n,root);
+        
+        for(ll i=1;i<=n;i++)
+        {
+            ll x;
+            cin>>x;
+            val[i]=x;
+        }
+        
+        ll q;
+        cin>>q;
+        while(q--)
+        {
+            ll a,b,p;
+            cin>>a>>b;
+            if(a==b)
+            {p=1;
+            temp[0]=val[a];
+            }
+            else
+            {
+            ll lca = getLCA(a , b);
+               p=getproduct(a,lca,b);
+            }
+            
+            cout<<countDivisorsMult(temp,p)<<endl;
+        }
+        
+        
+    }
+ 
+    
+}

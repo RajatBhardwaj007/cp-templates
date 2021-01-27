@@ -1,0 +1,110 @@
+class node
+{   public:
+    int data;
+    node* left;
+    node* right;
+};
+--------------------------------------------------------------------
+TO GET NEW NODE:
+
+node* getnewnode(int data)
+{
+    node* temp=new node(); 
+    temp->data=data;
+    temp->left=NULL;
+    temp->right=NULL;
+    return temp;
+}
+-----------------------------------------------------------------------
+TO INSERT ELEMENTS IN BST(NOTE: TAKE ABOVE TWO ALSO)
+
+//this fuction returns pointer that was inserted as else, it will not change the value in root.
+// ye hi root ki updated value h.to root=insertnode();
+node* insertnode(node* root,int data)  
+{
+    if(root==NULL)
+        root=getnewnode(data);
+      else if( data<=root->data)
+          root->left=insertnode(root->left,data);
+      else
+        root->right=insertnode(root->right,data);
+      return root;
+}
+------------------------------------------------------------------------------
+TO SEARCH A NODE
+
+bool searchnode(node* root, int data)
+{
+    if(root==NULL)
+        return false;
+    else if(root->data==data)
+         return true;
+    else if(data<=root->data)
+       return searchnode(root->left,data);
+       else
+      searchnode(root->right,data);  
+}
+--------------------------------------------------------------------------------
+TO FIND HEIGHT OF A TREE:
+
+int findheight(node* root)
+{
+    if(root==NULL)
+        return 0;
+   int leftheight=findheight(root->left);
+    int rightheight=findheight(root->right);
+    if(leftheight>=rightheight)
+    return (leftheight+1);
+    else
+        return (rightheight+1);
+}
+------------------------------------------------------------------------------------
+TO FIND LOWEST COMMON ANCESTOR OF GIVEN TWO NODES:
+ 
+node * lca(node * root, int v1,int v2){
+    if(root->data > v1 && root->data > v2){ // check if both keys are to the left of curr. node
+        return lca(root->left, v1, v2);
+    }
+    if(root->data < v1 && root->data < v2){ // check if both keys are to the right of curr. node
+        return lca(root->right, v1, v2);
+    }
+    return root;                            // return the LCA
+}
+----------------------------------------------------------------------------------------
+MAX NODE IN A PATH BETWEEN TWO NODES
+(NOTE:IT USES ABOVE FUNCTION)
+
+ll maxInPath(node * root, int x){            // this function find max in path from root node to node x
+    // for this problem we pass root node = lca(a, b) and x can be either a or b
+    if(root->data == x){       
+        return x;
+    }
+    if(root->data > x){
+        return max(maxInPath(root->left, x), root->data);
+    }else{
+        return max(maxInPath(root->right, x), root->data);
+    }
+}
+
+node* LCA = lca(root, a, b) ;                                         // a = node A and b = node B
+ans = max(maxInPath(LCA, a), maxInPath(LCA, b));                     // max(ans1, ans2)
+cout << ans << endl;
+------------------------------------------------------------------------------------------
+METHOD OF TRAVERSAL
+
+void preordertraversal(node* root)
+{
+    if(root==NULL)
+    return;
+    cout<<root->data<<" ";
+    preordertraversal(root->left);
+    preordertraversal(root->right);
+}
+void inordertraversal(node* root)
+{
+    if(root==NULL)
+    return;
+    inordertraversal(root->left);
+    cout<<root->data<<" ";
+    inordertraversal(root->right);
+}

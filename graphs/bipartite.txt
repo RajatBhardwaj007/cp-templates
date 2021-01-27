@@ -1,0 +1,30 @@
+bool dfs(int v,int c)
+{  vis[v]=1;
+   col[c]=1;
+   for(int child:adj[v])
+    {
+      if(dfs(child,c^1)==false)  //agar kisi node pr false aaya to overall false return kr dega ye
+	return false;
+	
+     else if(col[v]==col[child])
+        return false;
+    }
+   
+   return true;
+
+}
+
+---------------------
+NOTE
+agar jyaada connecting curve hue to hr kisi k lie dekhna pdega. to kuch nahi h bs dfs mrko pta hi h ki sb connecting nodes ko ek saath visited kr deta h. to ek baar call kro.
+aur baaki nodes ko check krte jaao.
+
+for(int i=1;i<=n;i++)
+{
+    if(vis[i]==0)
+   {
+  bool res=dfs(i,0);
+    if(res==false)
+	flag=false;
+    }
+}
